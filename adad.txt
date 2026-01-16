@@ -1,0 +1,91 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "TheLM2022 " .. Fluent.Version,
+    SubTitle = "by ป้าใจ",
+    TabWidth = 140,
+    Size = UDim2.fromOffset(480, 360),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "General" }),
+    Settings = Window:AddTab({ Title = "ตั้งค่า", Icon = "settings" })
+}
+
+local Options = Fluent.Options
+
+Fluent:Notify({
+    Title = "Notification",
+    Content = "Yes king is a real king",
+    SubContent = "Ambatukammm",
+    Duration = 5
+})
+
+-- ███ Auto get money ███
+local AutoFish = false
+local FishLoop
+
+Tabs.Main:AddToggle("AutoFish", {
+    Title = "Auto get money",
+    Description = "ถือเบ็ดตอนใช้ด้วย i ngo",
+    Default = false,
+    Callback = function(value)
+        AutoFish = value
+
+        if value then
+            FishLoop = task.spawn(function()
+                while AutoFish do
+                    local plrs = game:GetService("Players")
+                    local target = plrs:FindFirstChild("kuyheeyaianddum")
+
+                    if target then
+                        local rod = plrs.LocalPlayer.Character:FindFirstChild("FishingRod")
+                        if rod and rod:FindFirstChild("Pointer") then
+                            local args = {
+                                target,
+                                "FishingRod",
+                                rod.Pointer
+                            }
+
+                            game:GetService("ReplicatedStorage")
+                                :WaitForChild("HaveFish")
+                                :FireServer(unpack(args))
+                        end
+                    end
+
+                    task.wait(2)
+                end
+            end)
+        else
+            AutoFish = false
+        end
+    end
+})
+
+-- ███ Manager ต่างๆ ███
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "TheLM2022",
+    Content = "Script TheLM2022 ได้โหลดขึ้นมาแล้ว.",
+    Duration = 8
+})
+
+SaveManager:LoadAutoloadConfig()
