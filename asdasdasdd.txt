@@ -41,20 +41,23 @@ Tabs.Main:AddToggle("AutoFish", {
             FishLoop = task.spawn(function()
                 while AutoFish do
                     local plrs = game:GetService("Players")
-                    local target = plrs:FindFirstChild("kuyheeyaianddum")
+                    local target = plrs.LocalPlayer -- 🔥 แก้ตรงนี้
 
                     if target then
-                        local rod = plrs.LocalPlayer.Character:FindFirstChild("FishingRod")
-                        if rod and rod:FindFirstChild("Pointer") then
-                            local args = {
-                                target,
-                                "FishingRod",
-                                rod.Pointer
-                            }
+                        local char = plrs.LocalPlayer.Character
+                        if char then
+                            local rod = char:FindFirstChild("FishingRod")
+                            if rod and rod:FindFirstChild("Pointer") then
+                                local args = {
+                                    target,
+                                    "FishingRod",
+                                    rod.Pointer
+                                }
 
-                            game:GetService("ReplicatedStorage")
-                                :WaitForChild("HaveFish")
-                                :FireServer(unpack(args))
+                                game:GetService("ReplicatedStorage")
+                                    :WaitForChild("HaveFish")
+                                    :FireServer(unpack(args))
+                            end
                         end
                     end
 
